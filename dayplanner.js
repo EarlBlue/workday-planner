@@ -1,24 +1,29 @@
-var hour = moment().format("H"); 
-var minute = moment().format("mm"); 
-var second = moment().format("ss");
 
 //Function to capture current time every second
 setInterval(function getTime() {
     $("#clock").empty();
-    var time = hour + ":" + minute + ":" + second;
-    var clock = `<h1>${time}</h1>`;
+    var time = moment().format("hh:mm:ss a");
+    var day = moment().format("dddd");
+    var date = moment().format("MMMM Do YYYY")
+    var clock = `
+    <div class="text-center">
+    <h4>${time}</h4>
+    <h4>${day}</h4>
+    <h4>${date}</h4>
+    </div>`;
     $("#clock").empty();
     $("#clock").append(clock);
-},1000);
+}, 1000);
 
-//Function to set local storage keys and values
+//Function to set local storage keys and values and text box values
 $("#clear").on("click", function setStorage() {
+    $("textarea").val(" ");
     for (var i = 0; i < 24; i++) {
-        localStorage.setItem([i] + "00hrs", "")
-    }
+        localStorage.setItem([i] + "00hrs", " ");
+    };
 });
 
-//Function to make the planner table
+// //Function to make the planner table
 function makeTable() {
     for(var i = 0; i < 24; i++) {
         var row = `
@@ -31,9 +36,12 @@ function makeTable() {
                             <button class="btn btn-outline-secondary" name="${i}00hrs" type="button" id="button${i}">Save</button>
                           </div>
                       </div>`
-        $("#main").append(row)
+        $("#main").append(row);
     }
-
+    
+    //Calls set styling function for every iteration of makeTable function
+    setInterval(setStyling(), 1000)
+    
     //Function to capture text on button click, Part of makeTable function
     $("button").on("click", function() {
         console.log("click")
@@ -43,26 +51,24 @@ function makeTable() {
     });
 };
 
+//Function to set styling based on time
+function setStyling() {
+    var rowTime = document.body.childNodes[1].childNodes[9].children;
+    var currentTime = moment().hour() + ":00"
+    for (var i = 0; i < 24; i++) {
+        if(rowTime[i].children[0].innerText.toString() < currentTime.toString()) {
+            console.log("less than") 
+            $("#" + i).addClass("bg-secondary")
+        } else if (rowTime[i].children[0].innerText.toString() == currentTime.toString()) {
+            console.log("equal to")
+            $("#" + i).addClass("bg-success")
+        } else if (rowTime[i].children[0].innerText.toString() > currentTime.toString()) {
+            console.log("greater than")
+            $("#" + i).addClass("bg-warning")
+        }
+    };
+};
 
-
-//Function to check value of table
-// function currentTime() {
-//     for (var i = 0; i < 24; i++) {
-//         console.log(window.document.body.childNodes[1].childNodes[9].children[0].children[i].innerText);
-//         // console.log(currentHour)
-//     }
-//     //var currentHour = $("#current-time")[0].innerText;
-//     console.log(this)
-//     console.log(document.body.childNodes[1].childNodes[9].children[0].children[0].innerText)
-//     console.log(hour)
-//     //console.log(currentHour)
-//     // if(currentHour == hour) {
-//     //     console.log("match")
-//     // }
-// } 
-
-
-
-//setStorage();
 makeTable();
-//currentTime();
+
+ 
