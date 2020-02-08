@@ -53,22 +53,19 @@ function makeTable() {
 
 //Function to set styling based on time
 function setStyling() {
-    var rowTime = document.body.childNodes[1].childNodes[9].children;
-    var currentTime = moment().hour() + ":00"
+    var currentTime = moment().format("H");
     for (var i = 0; i < 24; i++) {
-        if(rowTime[i].children[0].innerText.toString() < currentTime.toString()) {
-            console.log("less than") 
-            $("#" + i).addClass("bg-secondary")
-        } else if (rowTime[i].children[0].innerText.toString() == currentTime.toString()) {
-            console.log("equal to")
-            $("#" + i).addClass("bg-success")
-        } else if (rowTime[i].children[0].innerText.toString() > currentTime.toString()) {
-            console.log("greater than")
-            $("#" + i).addClass("bg-warning")
-        }
+        if (i == currentTime) {
+            $("#" + i).addClass("bg-success");
+        } else if (i > currentTime) {
+            $("#" + i).addClass("bg-warning");
+        } else {
+            $("#" + i).addClass("bg-secondary");
+        } 
     };
 };
 
 makeTable();
+
 
  
